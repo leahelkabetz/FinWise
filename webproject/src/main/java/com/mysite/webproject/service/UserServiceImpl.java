@@ -3,10 +3,11 @@ package com.mysite.webproject.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mysite.webproject.dal.UserRepository;
 import com.mysite.webproject.model.User;
-
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

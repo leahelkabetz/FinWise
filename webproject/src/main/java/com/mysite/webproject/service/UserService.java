@@ -6,14 +6,14 @@ import com.mysite.webproject.model.User;
 
 public interface UserService {
 
-void addUser(User user);
+void addUser(User user);      //הוספת משתמש חדש למערכת
 
 void updateUser(Long id, User updated);
 
-void deleteUser(Long id);
+// void deleteUser(Long id);
 
-Optional<User> getUserByNumber(Long number);
+Optional<User> getUserByNumber(Long number); //לפי מספר זהות
 
-boolean login(String email, String password);
+Optional<User> login(String email, String password);  //התחברות
 
 }

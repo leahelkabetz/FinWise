@@ -26,4 +26,5 @@ void checkForAlerts();
 
 Report generateMonthlyReport(int month, int year);
 
+List<String> getAllTransactionCategoryName(String categoryName);
 } 

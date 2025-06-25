@@ -19,13 +19,17 @@ public class Transaction {
     private Long transactionId;
 
     @Column
-    private Long userNumber;
+    private Long userId;
+    
+    @ManyToOne
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    private User user;
 
     @Column
-    private String type;
+    private Long categoryId;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;
 
     @Column

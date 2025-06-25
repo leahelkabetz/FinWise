@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysite.webproject.dal.UserRepository;
 import com.mysite.webproject.model.User;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -24,26 +25,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(Long id, User updated) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        Optional<User> userOpt = userRepo.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setUserNumber(updated.getUserNumber());
+            user.setEmail(updated.getEmail());
+            user.setPassword(updated.getPassword());
+            user.setPhoneNumber(updated.getPhoneNumber());
+
+            userRepo.save(user);
+        } else {
+            throw new RuntimeException("User with id " + id + " not found");
+        }
     }
+
+    // @Override
+    // public void deleteUser(Long id) {
+    //     if (!userRepo.existsById(id)) {
+    //         throw new RuntimeException("User with id " + id + " not found");
+    //     }
+    //     userRepo.deleteById(id);
+    // }
 
     @Override
-    public void deleteUser(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
+    public Optional<User> login(String email, String password) {
+        Optional<User> userOpt = userRepo.findByEmail(email);
+        if (userOpt.isEmpty())
+            return Optional.empty();
+
+        User user = userOpt.get();
+        if (!user.getPassword().equals(password))
+            return Optional.empty();
+        return Optional.of(user);
     }
 
+    // אולי לא נצרך
     @Override
     public Optional<User> getUserByNumber(Long number) {
         return userRepo.findByUserNumber(number);
-    }
-
-    @Override
-    public boolean login(String email, String password) {
-        Optional<User> userOptional = userRepo.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        return user.getPassword().equals(password);
     }
 }

@@ -18,7 +18,7 @@ public class EmailServiceImpl implements EmailService {
         message.setTo("target@example.com"); // כתובת היעד בפועל
         message.setSubject("התראה חדשה (" + alert.getLevel() + ")");
         message.setText(
-                "מספר משתמש: " + alert.getUserNumber() + "\n" +
+                "מספר משתמש: " + alert.getAlertId() + "\n" +
                 "רמת התראה: " + alert.getLevel() + "\n" +
                 "תאריך ושעה: " + alert.getTimestamp() + "\n\n" +
                 "תוכן ההתראה:\n" + alert.getMessage()

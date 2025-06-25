@@ -41,4 +41,11 @@ public class TransactionController {
     public void deleteTransaction(@PathVariable Long id) {
         ts.deleteTransaction(id);
     }
+    
+    //עדיף לעשות עם הסימני שאלה
+    @GetMapping("/getNames/{cName}")
+    public List<String> getAllTransactionByCategoryName(@PathVariable String cName) {
+        return ts.getAllTransactionCategoryName(cName);
+    }
+
 }

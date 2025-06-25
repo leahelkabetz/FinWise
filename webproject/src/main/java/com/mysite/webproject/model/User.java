@@ -16,7 +16,7 @@ public class User {
     @GeneratedValue
     private Long userId;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private Long userNumber;
 
     @Column

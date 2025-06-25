@@ -2,10 +2,12 @@ package com.mysite.webproject.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysite.webproject.dal.CategoryRepository;
 import com.mysite.webproject.dal.TransactionRepository;
 import com.mysite.webproject.model.Report;
 import com.mysite.webproject.model.Transaction;
@@ -15,7 +17,8 @@ public class TransactionServiceImpl implements TransactionService {
     
     @Autowired
     private TransactionRepository transactionRepo;
-
+    @Autowired
+    private CategoryRepository categoryRepo;
     // יש לשנות את המימוש בהתאם למה שאני צריכה בפרויקט שלי
     @Override
     public void addTransaction(Transaction transaction) {
@@ -62,6 +65,11 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Report generateMonthlyReport(int month, int year) {
         throw new UnsupportedOperationException("Unimplemented method 'generateMonthlyReport'");
+    }
+
+    @Override
+    public List<String> getAllTransactionCategoryName(String categoryName) {
+   return categoryRepo.findByName(categoryName).getTransactions().stream().map(Transaction::getDescription).toList();
     }
 
 }

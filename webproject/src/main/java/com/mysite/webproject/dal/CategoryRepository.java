@@ -8,5 +8,5 @@ import com.mysite.webproject.model.Category;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category,Long>{
-    
+    public Category findByName(String name);
 }

@@ -17,12 +17,6 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    // החזרת אובייקט Report לפי חודש ושנה (JSON רגיל)
-    @GetMapping("/getreport/{month}/{year}")
-    public Report generateReport(@PathVariable int month, @PathVariable int year) {
-        return reportService.generateMonthlyReport(month, year);
-    }
-
     // הורדת הדוח כקובץ PDF
     @GetMapping("/downloadreport/{month}/{year}/pdf")
     public ResponseEntity<byte[]> downloadReportPdf(@PathVariable int month, @PathVariable int year) {

@@ -14,17 +14,14 @@ Transaction updateTransaction(Long id, Transaction updated);
 
 void deleteTransaction(Long id);
 
-List<Transaction> getAllTransactions();
+List<Transaction> getAllTransactionsByUser(Long userId);
 
-List<Transaction> getTransactionsByDateRange(LocalDate start, LocalDate end);
+List<Transaction> getTransactionsByDateRange(Long userId, LocalDate start, LocalDate end);
 
-List<Transaction> getTransactionsByType(String type); // "income" or "expense"
+List<Transaction> getTransactionsByCategory(Long userId, Long categoryId);
 
-double calculateTotalBalance();
+double calculateTotalBalance(Long userId);
 
-void checkForAlerts();
+boolean checkForAlerts(Long userId);
 
-Report generateMonthlyReport(int month, int year);
-
-List<String> getAllTransactionCategoryName(String categoryName);
 } 

@@ -55,17 +55,6 @@ public class UserController {
         }
     }
 
-     // מחיקת משתמש
-    // @DeleteMapping("delete/{id}")
-    // public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-    //     try {
-    //         us.deleteUser(id);
-    //         return ResponseEntity.ok("User deleted successfully");
-    //     } catch (RuntimeException ex) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    //     }
-    // }
-
     @GetMapping("/byNumber/{number}")
     public ResponseEntity<?> getUserByNumber(@PathVariable Long number) {
         Optional<User> user = us.getUserByNumber(number);

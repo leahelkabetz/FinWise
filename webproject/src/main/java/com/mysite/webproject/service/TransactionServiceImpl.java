@@ -2,74 +2,77 @@ package com.mysite.webproject.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale.Category;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysite.webproject.dal.CategoryRepository;
 import com.mysite.webproject.dal.TransactionRepository;
 import com.mysite.webproject.model.Report;
 import com.mysite.webproject.model.Transaction;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-    
+
     @Autowired
     private TransactionRepository transactionRepo;
-    @Autowired
-    private CategoryRepository categoryRepo;
-    // יש לשנות את המימוש בהתאם למה שאני צריכה בפרויקט שלי
+
     @Override
     public void addTransaction(Transaction transaction) {
-       if(transactionRepo.existsById(transaction.getTransactionId()))
-          throw new RuntimeException("id already exists!!");
-       transactionRepo.save(transaction);
+        // if (transaction.getTransactionId() != null && transactionRepo.existsById(transaction.getTransactionId()))
+        //     throw new RuntimeException("id already exists!!");
+        transactionRepo.save(transaction);
     }
 
     @Override
     public Transaction updateTransaction(Long id, Transaction updated) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateTransaction'");
+        Transaction existing = transactionRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+        existing.setDescription(updated.getDescription());
+        existing.setAmount(updated.getAmount());
+        existing.setDate(updated.getDate());
+        existing.setCategoryId(updated.getCategoryId());
+        existing.setFixed(updated.isFixed());
+        existing.setEstimated(updated.isEstimated());
+        return transactionRepo.save(existing);
     }
 
     @Override
     public void deleteTransaction(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteTransaction'");
+        if (!transactionRepo.existsById(id)) {
+            throw new RuntimeException("Transaction not found");
+        }
+        transactionRepo.deleteById(id);
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllTransactions'");
+    public List<Transaction> getAllTransactionsByUser(Long userId) {
+        return transactionRepo.findByUserId(userId);
     }
 
     @Override
-    public List<Transaction> getTransactionsByDateRange(LocalDate start, LocalDate end) {
-        throw new UnsupportedOperationException("Unimplemented method 'getTransactionsByDateRange'");
+    public List<Transaction> getTransactionsByDateRange(Long userId, LocalDate start, LocalDate end) {
+        return transactionRepo.findByUserIdAndDateBetween(userId, start, end);
     }
 
     @Override
-    public List<Transaction> getTransactionsByType(String type) {
-        throw new UnsupportedOperationException("Unimplemented method 'getTransactionsByType'");
+    public List<Transaction> getTransactionsByCategory(Long userId, Long categoryId) {
+        return transactionRepo.findByUserIdAndCategory_CategoryId(userId, categoryId);
     }
 
     @Override
-    public double calculateTotalBalance() {
-        throw new UnsupportedOperationException("Unimplemented method 'calculateTotalBalance'");
+    public double calculateTotalBalance(Long userId) {
+        return transactionRepo.findByUserId(userId).stream()
+                .mapToDouble(t -> t.getAmount() != null ? t.getAmount() : 0.0)
+                .sum();
     }
 
     @Override
-    public void checkForAlerts() {
-        throw new UnsupportedOperationException("Unimplemented method 'checkForAlerts'");
+    public boolean checkForAlerts(Long userId) {
+        double balance = calculateTotalBalance(userId);
+        return balance > 0;
     }
 
-    @Override
-    public Report generateMonthlyReport(int month, int year) {
-        throw new UnsupportedOperationException("Unimplemented method 'generateMonthlyReport'");
-    }
-
-    @Override
-    public List<String> getAllTransactionCategoryName(String categoryName) {
-   return categoryRepo.findByName(categoryName).getTransactions().stream().map(Transaction::getDescription).toList();
-    }
 
 }

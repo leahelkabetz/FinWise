@@ -42,12 +42,15 @@ To run the backend server:
 ✅ Option 1: From VS Code or IntelliJ
 Simply open MainApplication.java (the class with public static void main) and click Run ▶️.
  🧪 Option 2: Using terminal
+ 
 ```bash
 ./mvnw spring-boot:run
 
 Or (if Maven is installed globally):
+
 ```bash
 mvn spring-boot:run
+
 5. The server will start at: http://localhost:8080
 
 ### Running the Client

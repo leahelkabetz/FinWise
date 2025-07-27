@@ -45,6 +45,7 @@ Simply open MainApplication.java (the class with public static void main) and cl
  
 ```bash
 ./mvnw spring-boot:run
+```
 
 Or (if Maven is installed globally):
 

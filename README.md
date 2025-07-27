@@ -18,11 +18,13 @@ This project is a full-stack web application designed to help users manage their
 -  Date-range filtering and monthly summaries
 -  Recurring transaction logic
 -  Email alerts for important events
--  Data saved via 
+-  Data saved via
+
+
 
 ### Running the Client
 
-```bash
+```powershell
 cd client
 npm install
 npm start

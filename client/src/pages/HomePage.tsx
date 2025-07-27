@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import TableTransactions from "../components/TableTransactions";
-import Notifications from "../components/Notifications";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../slices/store";
@@ -35,51 +34,46 @@ const HomePage: React.FC = () => {
 
   return (
 
-    <Box sx={{ mt: 0, direction: "rtl", px: 1 }}> {/* px מוקטן */}
-    <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    mb: 4,
-    mt: 4,
-  }}
->
-  <Typography
-    variant="h4"
-    sx={{
-      fontWeight: "bold",
-      color: colors.highlight,
-      textAlign: "center",
-      animation: "pulseShadow 2.5s infinite ease-in-out",
-    }}
-  >
-    שליטה כלכלית מתחילה כאן 💡
-  </Typography>
+    <Box sx={{ mt: 0, direction: "rtl", px: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: -5
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: colors.accent,
+            textAlign: "center",
+            animation: "pulseShadow 2.5s infinite ease-in-out",
+          }}
+        >
+          שליטה כלכלית מתחילה כאן
+        </Typography>
 
-  {/* אנימציה מתמשכת ב־CSS */}
-  <style>
-    {`
+        {/* אנימציה מתמשכת ב־CSS */}
+        <style>
+          {`
       @keyframes pulseShadow {
         0% {
-          text-shadow: 0 0 0px ${colors.highlight};
+          text-shadow: 0 0 0px ${colors.accent};
         }
         50% {
-          text-shadow: 0 0 12px ${colors.highlight};
+          text-shadow: 0 0 12px ${colors.accent};
         }
         100% {
-          text-shadow: 0 0 0px ${colors.highlight};
+          text-shadow: 0 0 0px ${colors.accent};
         }
       }
     `}
-  </style>
-</Box>
+        </style>
+      </Box>
 
       <Box
-        sx={{
-          mb: 4,
-          mt:4
-        }}
       >
         <Typography
           variant="h5"
@@ -102,15 +96,13 @@ const HomePage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* תוכן: קישורים + טבלה */}
       <Box
         display="flex"
         flexDirection={{ xs: "column", md: "row", }}
         sx={{ mt: 4 }}
-        gap={2} // מעט ריווח
+        gap={2} 
         alignItems="flex-start"
       >
-        {/* טבלה */}
         <Box sx={{ flexGrow: 1 }}>
           <TableTransactions
             start={startDate}
@@ -119,16 +111,6 @@ const HomePage: React.FC = () => {
           />
         </Box>
 
-        <Box
-          sx={{
-            width: { xs: "100%", md: 250 }, // לדוגמה, רוחב קבוע רק במסך גדול
-            flexShrink: 0,
-            mt: -6,
-            mr:6
-          }}
-        >
-          <Notifications />
-        </Box>
       </Box>
     </Box>
 

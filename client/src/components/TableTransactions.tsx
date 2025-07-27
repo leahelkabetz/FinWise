@@ -67,65 +67,76 @@ const TableTransactions: React.FC<TableTransactionsProps> = ({ start, end, title
   return (
     <Paper
       elevation={3}
-      sx={{ p: 3, backgroundColor: "#f9fafc", borderRadius: 2, direction: "rtl" }}
+      sx={{
+        p: 3,
+        backgroundColor: "#f9fafc",
+        borderRadius: 2,
+        direction: "rtl",
+        height: "60vh", 
+        width: "100%",   
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      <Typography variant="h5" gutterBottom sx={{ color: colors.dark,  }}>
+      <Typography variant="h5" gutterBottom sx={{ color: colors.dark }}>
         {title}
       </Typography>
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>תאריך</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>קטגוריה</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>סוג</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>תיאור</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>סכום (₪)</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold" }}>יתרה (₪)</TableCell>
-          </TableRow>
-        </TableHead>
+      <Box sx={{ flex: 1, overflow: "auto" }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>תאריך</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>קטגוריה</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>סוג</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>תיאור</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>סכום (₪)</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>יתרה (₪)</TableCell>
+            </TableRow>
+          </TableHead>
 
-        <TableBody>
-          {transactions.map((t, index) => {
-            const isIncome = t.categoryTypeLabel === "הכנסה";
-            return (
-              <StyledTableRow key={index}>
-                <TableCell align="right">{new Date(t.date).toLocaleDateString("he-IL")}</TableCell>
-                <TableCell align="right">{t.categoryName}</TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ color: isIncome ? "success.main" : "error.main", fontWeight: "bold" }}
-                >
-                  {t.categoryTypeLabel}
-                </TableCell>
-                <TableCell align="right">{t.description}</TableCell>
-                <TableCell align="right">
-                  {t.amount.toLocaleString("he-IL", {
-                    style: "currency",
-                    currency: "ILS",
-                    minimumFractionDigits: 2,
-                  })}
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{
-                    color: t.balance < 0 ? "error.main" : "success.main",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {t.balance !== undefined
-                    ? t.balance.toLocaleString("he-IL", {
+          <TableBody>
+            {transactions.map((t, index) => {
+              const isIncome = t.categoryTypeLabel === "הכנסה";
+              return (
+                <StyledTableRow key={index}>
+                  <TableCell align="right">{new Date(t.date).toLocaleDateString("he-IL")}</TableCell>
+                  <TableCell align="right">{t.categoryName}</TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ color: isIncome ? "success.main" : "error.main", fontWeight: "bold" }}
+                  >
+                    {t.categoryTypeLabel}
+                  </TableCell>
+                  <TableCell align="right">{t.description}</TableCell>
+                  <TableCell align="right">
+                    {t.amount.toLocaleString("he-IL", {
+                      style: "currency",
+                      currency: "ILS",
+                      minimumFractionDigits: 2,
+                    })}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      color: t.balance < 0 ? "error.main" : "success.main",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {t.balance !== undefined
+                      ? t.balance.toLocaleString("he-IL", {
                         style: "currency",
                         currency: "ILS",
                         minimumFractionDigits: 2,
                       })
-                    : "-"}
-                </TableCell>
-              </StyledTableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                      : "-"}
+                  </TableCell>
+                </StyledTableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Box>
 
       {transactions.length === 0 && (
         <Box mt={2}>
@@ -134,9 +145,13 @@ const TableTransactions: React.FC<TableTransactionsProps> = ({ start, end, title
       )}
 
       {balance !== null && (
-        <Box mt={3}>
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: colors.dark,textAlign: "left" }}>
-            סה"כ : {balance.toLocaleString("he-IL", {
+        <Box mt={2}>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: "bold", color: colors.dark, textAlign: "left" }}
+          >
+            סה"כ:{" "}
+            {balance.toLocaleString("he-IL", {
               style: "currency",
               currency: "ILS",
               minimumFractionDigits: 2,
@@ -145,6 +160,7 @@ const TableTransactions: React.FC<TableTransactionsProps> = ({ start, end, title
         </Box>
       )}
     </Paper>
+
   );
 };
 

@@ -51,13 +51,13 @@ public class Transaction {
 
     @Column
     private boolean isFixed;
+    private LocalDate lastProcessedDate; 
+
   @Column
 private Boolean processed;
 
 
 
 
-    // @Column
-    // private boolean isEstimated;
 
 }

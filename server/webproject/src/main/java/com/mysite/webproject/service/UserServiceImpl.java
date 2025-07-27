@@ -33,27 +33,22 @@ public class UserServiceImpl implements UserService {
         balanceRepo.save(balance);
     }
 
-   @Override
-public void updateUser(Long id, UserDTO updated) {
-    Optional<User> userOpt = userRepo.findById(id);
-    if (userOpt.isPresent()) {
-        User user = userOpt.get();
+    @Override
+    public void updateUser(Long id, UserDTO updated) {
+        Optional<User> userOpt = userRepo.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
 
-        // שומרים את userNumber הקיים, לא מעדכנים אותו
-        // user.setUserNumber(user.getUserNumber());
-user.setUserName(updated.getUserName());
-        user.setEmail(updated.getEmail());
-        user.setPassword(updated.getPassword());
-        user.setPhoneNumber(updated.getPhoneNumber());
+            user.setUserName(updated.getUserName());
+            user.setEmail(updated.getEmail());
+            user.setPassword(updated.getPassword());
+            user.setPhoneNumber(updated.getPhoneNumber());
 
-        userRepo.save(user);
-    } else {
-        throw new RuntimeException("User with id " + id + " not found");
+            userRepo.save(user);
+        } else {
+            throw new RuntimeException("User with id " + id + " not found");
+        }
     }
-}
-
-
-    
 
     @Override
     public Optional<User> login(String email, String password) {
@@ -68,17 +63,16 @@ user.setUserName(updated.getUserName());
     }
 
     @Override
-public Optional<UserDTO> getUserById(Long id) {
-    return userRepo.findById(id).map(user -> {
-        UserDTO dto = new UserDTO();
-        dto.setUserId(user.getUserId());
-        dto.setUserName(user.getUserName());
-        dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
-        dto.setPhoneNumber(user.getPhoneNumber());
-        return dto;
-    });
-}
-
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepo.findById(id).map(user -> {
+            UserDTO dto = new UserDTO();
+            dto.setUserId(user.getUserId());
+            dto.setUserName(user.getUserName());
+            dto.setEmail(user.getEmail());
+            dto.setPassword(user.getPassword());
+            dto.setPhoneNumber(user.getPhoneNumber());
+            return dto;
+        });
+    }
 
 }

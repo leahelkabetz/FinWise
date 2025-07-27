@@ -6,7 +6,7 @@ import com.mysite.webproject.model.Report;
 
 
 public interface ReportService {
-    byte[] generateReportPdf(Report report); // להורדת דוח בפורמט PDF
+    byte[] generateReportPdf(Report report); 
     Report generateReport(Long userId, LocalDate startDate, LocalDate endDate);
 
 }

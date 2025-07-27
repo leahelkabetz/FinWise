@@ -29,10 +29,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TransactionController {
     @Autowired
     private TransactionService ts;
-    // @Autowired
-    // private ReportService rs;
-    // @Autowired
-    // private BalanceService bs;
 
     @PostMapping("/add")
     public ResponseEntity<Transaction> addTransaction(

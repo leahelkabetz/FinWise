@@ -47,7 +47,6 @@ public class UserController {
         }
     }
 
-    // עריכת משתמש
     @PutMapping("update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO updated) {
         try {
@@ -59,13 +58,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-public ResponseEntity<?> getUserById(@PathVariable Long id) {
-    Optional<UserDTO> user = us.getUserById(id);
-    if (user.isPresent()) {
-        return ResponseEntity.ok(user.get());
-    } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + id + " not found");
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        Optional<UserDTO> user = us.getUserById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + id + " not found");
+        }
     }
-}
 
 }

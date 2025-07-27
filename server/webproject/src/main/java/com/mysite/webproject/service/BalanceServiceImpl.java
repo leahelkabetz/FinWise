@@ -10,7 +10,6 @@ public class BalanceServiceImpl implements BalanceService {
     @Autowired
     private BalanceRepository balanceRepo;
 
-    
 
     @Override
     public Balance getBalanceByUser(Long userId) {

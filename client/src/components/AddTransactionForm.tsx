@@ -8,11 +8,13 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../slices/store";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { colors } from "../theme";
+import { useNavigate } from "react-router-dom";
+import { showMessage } from "../slices/messageSlice"; 
 
 interface Category {
   categoryId: number;
@@ -31,7 +33,8 @@ interface TransactionFormData {
 const AddTransactionForm: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const [categories, setCategories] = useState<Category[]>([]);
-
+const navigate = useNavigate();
+const dispatch = useDispatch();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -103,15 +106,25 @@ const AddTransactionForm: React.FC = () => {
           { params: { userId } }
         );
         console.log("נשלח בהצלחה:", res.data);
+       dispatch(showMessage({ message: " התנועה נוספה בהצלחה", severity: "success" }));
+
         resetForm();
       } catch (error) {
         console.error("שגיאה:", error);
+            dispatch(showMessage({ message: "שגיאה בהוספת התנועה ", severity: "error" }));
+
       }
     },
   });
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" dir="rtl">
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="flex-start" // במקום center – כי אנחנו רוצים להתחיל מלמעלה
+      sx={{ mt: 8, p: 4 }} // מרווח עליון במקום minHeight
+      dir="rtl"
+    >
       <Paper elevation={0} sx={{ p: 4, width: 500, borderRadius: 3 }}>
         <Typography variant="h5" align="center" gutterBottom sx={{ color: colors.highlight }}>
           הוספת תנועה חדשה
@@ -135,39 +148,6 @@ const AddTransactionForm: React.FC = () => {
             <MenuItem value="false">חד פעמית</MenuItem>
             <MenuItem value="true">קבועה</MenuItem>
           </TextField>
-          <TextField
-            {...turquoiseTextFieldStyle}
-            label="תיאור"
-            name="description"
-            value={formik.values.description}
-            onChange={formik.handleChange}
-            error={formik.touched.description && Boolean(formik.errors.description)}
-            helperText={formik.touched.description && formik.errors.description}
-          />
-
-          <TextField
-            {...turquoiseTextFieldStyle}
-            label="סכום"
-            name="amount"
-            type="number"
-            value={formik.values.amount}
-            onChange={formik.handleChange}
-            error={formik.touched.amount && Boolean(formik.errors.amount)}
-            helperText={formik.touched.amount && formik.errors.amount}
-          />
-
-          <TextField
-            {...turquoiseTextFieldStyle}
-            label="תאריך"
-            name="date"
-            type="date"
-            value={formik.values.date}
-            onChange={formik.handleChange}
-            error={formik.touched.date && Boolean(formik.errors.date)}
-            helperText={formik.touched.date && formik.errors.date}
-          />
-
-          
 
           <TextField
             {...turquoiseTextFieldStyle}
@@ -201,6 +181,46 @@ const AddTransactionForm: React.FC = () => {
                 </MenuItem>
               ))}
           </TextField>
+
+
+          <TextField
+            {...turquoiseTextFieldStyle}
+            label={
+              "תיאור" + (formik.values.fixed ? " (אופציונלי)" : "")
+            }
+            name="description"
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            error={formik.touched.description && Boolean(formik.errors.description)}
+            helperText={formik.touched.description && formik.errors.description}
+          />
+
+
+          <TextField
+            {...turquoiseTextFieldStyle}
+            label="סכום"
+            name="amount"
+            type="number"
+            value={formik.values.amount}
+            onChange={formik.handleChange}
+            error={formik.touched.amount && Boolean(formik.errors.amount)}
+            helperText={formik.touched.amount && formik.errors.amount}
+          />
+
+
+          <TextField
+            {...turquoiseTextFieldStyle}
+            label={
+              "תאריך" + (formik.values.fixed ? " חודשי" : "")
+            }
+            name="date"
+            type="date"
+            value={formik.values.date}
+            onChange={formik.handleChange}
+            error={formik.touched.date && Boolean(formik.errors.date)}
+            helperText={formik.touched.date && formik.errors.date}
+          />
+
 
           <Button
             type="submit"

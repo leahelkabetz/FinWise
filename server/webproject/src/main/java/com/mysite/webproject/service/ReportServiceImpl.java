@@ -91,7 +91,6 @@ public class ReportServiceImpl implements ReportService {
 
             document.setFont(font).setFontSize(10);
 
-            // הגדרת כיוון כללי לימין
             document.setTextAlignment(TextAlignment.RIGHT);
 
             // כותרת
@@ -117,7 +116,6 @@ public class ReportServiceImpl implements ReportService {
             Table table = new Table(UnitValue.createPercentArray(new float[] { 1, 4, 3, 3, 2, 3, 2 }))
                     .setWidth(UnitValue.createPercentValue(100));
 
-            // כותרות טבלה
 
             table.addHeaderCell(createHeaderCell(fixNumberText("קבוע?"), font));
             table.addHeaderCell(createHeaderCell(fixHebrewText("תיאור"), font));
@@ -127,7 +125,6 @@ public class ReportServiceImpl implements ReportService {
             table.addHeaderCell(createHeaderCell(fixHebrewText("תאריך"), font));
             table.addHeaderCell(createHeaderCell(fixHebrewText("מזהה תנועה"), font));
 
-            // שורות טבלה
             for (TransactionDTO t : report.getTransactions()) {
 
                 table.addCell(createCell(t.isFixed() ? fixHebrewText("כן") : fixHebrewText("לא"), font,
@@ -160,7 +157,6 @@ public class ReportServiceImpl implements ReportService {
                 .setBaseDirection(BaseDirection.RIGHT_TO_LEFT);
     }
 
-    // תא טבלה רגיל
     private Cell createCell(String text, PdfFont font, TextAlignment align) {
         return new Cell().add(new Paragraph(text != null ? text : "")
                 .setFont(font)
@@ -168,7 +164,6 @@ public class ReportServiceImpl implements ReportService {
                 .setBaseDirection(BaseDirection.RIGHT_TO_LEFT));
     }
 
-    // תא טבלה כותרת
     private Cell createHeaderCell(String text, PdfFont font) {
         return new Cell().add(new Paragraph(text)
                 .setFont(font)

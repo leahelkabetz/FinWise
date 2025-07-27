@@ -7,9 +7,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../slices/store";
 import { colors } from "../theme";
+import { showMessage } from "../slices/messageSlice"; 
+
 interface TransactionDTO {
   transactionId: number;
   date: string;
@@ -26,6 +28,7 @@ const RecurringTransactionsSettings: React.FC = () => {
   const [transactions, setTransactions] = useState<TransactionDTO[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<TransactionDTO>>({});
+const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchRecurring = async () => {
@@ -57,8 +60,12 @@ const RecurringTransactionsSettings: React.FC = () => {
         t.transactionId === editingId ? { ...t, ...editedTransaction } as TransactionDTO : t
       );
       setTransactions(updated);
+      dispatch(showMessage({ message: "העדכון בוצע בהצלחה", severity: "success" }));
+      
     } catch (err) {
       console.error("שגיאה בשמירה", err);
+      dispatch(showMessage({ message: "שגיאה בעדכון התנועה ", severity: "error" }));
+      
     }
   };
 
@@ -66,8 +73,11 @@ const RecurringTransactionsSettings: React.FC = () => {
     try {
       await axios.delete(`http://localhost:8080/transaction/delete/${id}`);
       setTransactions(transactions.filter(t => t.transactionId !== id));
+             dispatch(showMessage({ message: "התנועה נמחקה בהצלחה", severity: "success" }));
     } catch (err) {
       console.error("שגיאה במחיקה", err);
+      dispatch(showMessage({ message: "שגיאה במחיקת התנועה ", severity: "error" }));
+
     }
   };
 

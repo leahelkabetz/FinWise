@@ -1,15 +1,18 @@
 package com.mysite.webproject.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysite.webproject.dal.AlertRepository;
 import com.mysite.webproject.dal.BalanceRepository;
 import com.mysite.webproject.dal.CategoryRepository;
 import com.mysite.webproject.dal.TransactionRepository;
+import com.mysite.webproject.model.Alert;
 import com.mysite.webproject.model.Balance;
 import com.mysite.webproject.model.Category;
 import com.mysite.webproject.model.CategoryType;
@@ -25,13 +28,16 @@ public class TransactionServiceImpl implements TransactionService {
     private CategoryRepository categoryRepo;
     @Autowired
     private BalanceRepository balanceRepo;
+    @Autowired
+    private AlertRepository alertRepo;
+    @Autowired
+    private AlertService alertService;
 
     @Override
     public Transaction updateTransaction(Long id, Long userId, Transaction updated) {
         Transaction existing = transactionRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
-        // בדוק שהעסקה שייכת למשתמש
         if (!existing.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized update attempt");
         }
@@ -48,39 +54,47 @@ public class TransactionServiceImpl implements TransactionService {
     public void addTransaction(Long userId, Transaction transaction) {
         if (!transaction.isFixed()) {
             transaction.setUserId(userId);
-            transactionRepo.save(transaction);
 
-            // שליפת הקטגוריה של הפעולה
             Category category = categoryRepo.findById(transaction.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
+            transaction.setCategory(category); // ✅ תיקון קריטי!
             System.out.println("✅ קטגוריה שנמצאה: " + category.getName() + " (" + category.getType() + ")");
 
-            // שליפת ה-Balance של המשתמש
+            transactionRepo.save(transaction);
+
             Balance balance = balanceRepo.findByUserId(userId)
                     .orElseThrow(() -> new RuntimeException("Balance not found"));
             System.out.println("🔹 יתרה לפני עדכון: " + balance.getTotalBalance());
 
-            // חישוב הסכום לפי סוג הפעולה
             double amount = transaction.getAmount();
             if (category.getType() == CategoryType.EXPENSE) {
                 amount = -amount;
             }
-            System.out.println("🔸 סכום חתום (לפי סוג פעולה): " + amount);
+            System.out.println("סכום חתום (לפי סוג פעולה): " + amount);
 
-            // עדכון היתרה
             balance.setTotalBalance(balance.getTotalBalance() + amount);
-            System.out.println("✅ יתרה חדשה: " + balance.getTotalBalance());
+            System.out.println("יתרה חדשה: " + balance.getTotalBalance());
 
             balanceRepo.save(balance);
-            System.out.println("💾 balance נשמר בהצלחה");
+            System.out.println("balance נשמר בהצלחה");
+
+            Alert alert = new Alert();
+            alert.setUserId(userId);
+            alert.setTransaction(transaction);
+            alert.setMessage("תנועה חדשה התבצעה");
+            alert.setTimestamp(LocalDateTime.now());
+            alertRepo.save(alert);
+
+            alertService.sendAlert(alert); 
+            System.out.println("התראה נשלחה למשתמש " + userId);
+
         } else {
             // אם הפעולה היא קבועה, לא נעדכן את היתרה
             transaction.setUserId(userId);
             transactionRepo.save(transaction);
-            System.out.println("📅 נשמרה תנועה קבועה לביצוע עתידי בתאריך " + transaction.getDate());
+            System.out.println("נשמרה תנועה קבועה לביצוע עתידי בתאריך " + transaction.getDate());
         }
     }
-
 
     @Override
     public void deleteTransaction(Long id) {
@@ -99,20 +113,17 @@ public class TransactionServiceImpl implements TransactionService {
         double balance = 0;
 
         for (Transaction t : transactions) {
-            // נביא את האובייקט Category מתוך Transaction
             Category category = t.getCategory();
 
-            // נחשב את הסכום לפי סוג הפעולה
             double signedAmount = category.getType() == CategoryType.INCOME ? t.getAmount() : -t.getAmount();
             balance += signedAmount;
 
-            // ניצור DTO חדש
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(t.getDate());
             dto.setDescription(t.getDescription());
             dto.setAmount(t.getAmount());
             dto.setCategoryName(category.getName());
-            dto.setCategoryTypeLabel(category.getType().getLabel()); // עברית: הכנסה/הוצאה
+            dto.setCategoryTypeLabel(category.getType().getLabel()); 
             dto.setBalance(balance);
 
             result.add(dto);
@@ -165,7 +176,7 @@ public class TransactionServiceImpl implements TransactionService {
             dto.setFixed(t.isFixed());
             dto.setCategoryName(t.getCategory().getName());
             dto.setCategoryTypeLabel(t.getCategory().getType().getLabel());
-            dto.setBalance(0.0); // ניתן לחשב כאן איזון אם יש צורך
+            dto.setBalance(0.0); 
 
             result.add(dto);
         }

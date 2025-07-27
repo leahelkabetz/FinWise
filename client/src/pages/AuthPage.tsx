@@ -7,41 +7,42 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserId, setUserName } from "../slices/userSlice";
+import { showMessage } from "../slices/messageSlice"; 
 
 const AuthPage: React.FC = () => {
   const [openRegister, setOpenRegister] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
- const handleLogin = async (values: { email: string; password: string }) => {
-  try {
-    console.log("🔑 מנסה להתחבר עם:", values);
-    const res = await axios.post("http://localhost:8080/user/login", values);
-    console.log("✅ Login success:", res.data);
+  const handleLogin = async (values: { email: string; password: string }) => {
+    try {
+      console.log("🔑 מנסה להתחבר עם:", values);
+      const res = await axios.post("http://localhost:8080/user/login", values);
+      console.log("✅ Login success:", res.data);
 
-    const userId = res.data.userId;
-const userName = res.data.userName;
-    dispatch(setUserId(userId)); // ← מכניס ל־Redux את המשתמש המחובר
-        dispatch(setUserName(res.data.userName)); // <--- שומרת את השם
+      const userId = res.data.userId;
+      const userName = res.data.userName;
+      dispatch(setUserId(userId)); 
+      dispatch(setUserName(res.data.userName)); 
 
-localStorage.setItem("userId", userId);
-localStorage.setItem("userName", userName);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("userName", userName);
 
-    navigate(`/home/${userId}`); // ← ניתוב לפי userId, אם את משתמשת בו בנתיב
-  } catch (err) {
-    alert("Login failed");
-  }
-};
+      navigate(`/home/${userId}`); 
+    } catch (err) {
+      alert("Login failed");
+    }
+  };
 
   const handleRegister = async (data: { email: string; password: string; confirmPassword: string }) => {
     try {
       const res = await axios.post("http://localhost:8080/user/register", data);
       console.log("Register success:", res.data);
       setOpenRegister(false);
-      alert("Registration successful!");
+       dispatch(showMessage({ message: "הרשמתך בוצעה בהצלחה", severity: "success" }));
     } catch (err) {
       console.error(err);
-      alert("Registration failed");
+      dispatch(showMessage({ message: "ההרשמה נכשלה ", severity: "error" }));
     }
   };
 

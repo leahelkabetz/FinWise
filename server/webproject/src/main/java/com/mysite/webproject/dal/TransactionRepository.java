@@ -21,5 +21,6 @@ List<Transaction> findByUserIdAndDateBetweenOrderByDateAsc(Long userId, LocalDat
 List<Transaction> findByUserIdAndIsFixedTrue(Long userId);
 
 List<Transaction> findByIsFixedTrueAndDate(LocalDate date);
+List<Transaction> findByIsFixedTrue();
 
 }
